@@ -38,3 +38,7 @@ Its source-controlled copy is `Packaging/Assets/AboutLogo.png`. The About window
 renders the same transparent vector directly for sharpness and theme adaptation.
 
 Copy `PRIVACY.md`, `PRIVACY.en.md` and `LICENSE` from the repository root into `Contents/Resources/` before signing. The About window previews the policy matching the selected interface language.
+
+## Drag-to-install disk image
+
+Run `bash Scripts/build-dmg.sh` from the repository root on macOS. It packages the Release bundle and an absolute symlink to `/Applications` in a compressed, read-only HFS+ image. `FinderLayout.dsstore` is a generated Finder metadata template for icon view, with NotchIsland at (125, 108) and Applications at (385, 108). Building the image requires no third-party DMG tools.

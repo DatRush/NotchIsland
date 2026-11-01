@@ -24,6 +24,9 @@ struct AboutProjectView: View {
                     Text(L("О проекте", "About")).font(.headline)
                     Text(AboutProjectContent.story.isEmpty ? L("Здесь скоро появится история проекта от автора.", "The author's project story will appear here soon.") : AboutProjectContent.story)
                         .font(.system(size: 14)).lineSpacing(5).textSelection(.enabled)
+                    Link(destination: AboutProjectContent.repositoryURL) {
+                        actionLabel(L("Репозиторий на GitHub", "GitHub repository"), icon: "arrow.up.right")
+                    }.buttonStyle(.plain)
                 }
                 Divider()
                 infoSection(L("Что умеет приложение", "Features"), text: AboutProjectContent.features)

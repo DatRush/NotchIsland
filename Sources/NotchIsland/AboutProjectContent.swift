@@ -6,12 +6,12 @@ struct AboutProjectContent {
     NotchIsland это бесплатная утилита для MacBook, созданная с помощью Codex от OpenAI.
 
     Я собрал в ней инструменты, которых мне самому не хватало в повседневной работе.
-    Буду рад вашим идеям, пожеланиям и участию в разработке. Ссылка на репозиторий GitHub появится здесь позже.
+    Буду рад вашим идеям, пожеланиям и участию в разработке.
     """, """
     NotchIsland is a free MacBook utility created with the help of Codex by OpenAI.
 
     I brought together the tools I felt were missing from my daily workflow.
-    Ideas, suggestions and contributions are always welcome. A link to the GitHub repository will be added here later.
+    Ideas, suggestions and contributions are always welcome.
     """) }
     static var features: String { L("""
     • История буфера обмена и быстрый доступ к последнему скопированному.
@@ -29,5 +29,6 @@ struct AboutProjectContent {
     • Reorder tabs to suit your workflow.
     """) }
     static var supportDetails: String { L("Проект распространяется бесплатно. Если он оказался вам полезен, буду благодарен за любую финансовую поддержку на Boosty.", "The project is free. If you find it useful, I would be grateful for any financial support on Boosty.") }
+    static let repositoryURL = URL(string: "https://github.com/DatRush/NotchIsland")!
     static let supportURL: URL? = URL(string: "https://boosty.to/taykwn/donate")
 }
