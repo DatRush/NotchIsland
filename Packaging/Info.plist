@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>NotchIsland</string>
+	<key>CFBundleIdentifier</key>
+	<string>local.notchisland.prototype</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>CFBundleName</key>
+	<string>NotchIsland</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleVersion</key>
+	<string>0.1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>NotchIsland читает текущий трек Apple Music и управляет воспроизведением по вашим нажатиям.</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
+	<string>NotchIsland показывает и изменяет выбранный список Apple Reminders и переносит ваши локальные напоминания.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>NotchIsland показывает и изменяет выбранный список Apple Reminders и переносит ваши локальные напоминания.</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>ru</string>
+		<string>en</string>
+	</array>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>ru</string>
+</dict>
+</plist>

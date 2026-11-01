@@ -1,0 +1,3 @@
+"NSAppleEventsUsageDescription" = "NotchIsland reads the current Apple Music track and controls playback when you use the player buttons.";
+"NSRemindersFullAccessUsageDescription" = "NotchIsland displays and edits your selected Apple Reminders list and imports your local reminders.";
+"NSRemindersUsageDescription" = "NotchIsland displays and edits your selected Apple Reminders list and imports your local reminders.";
