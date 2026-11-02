@@ -4,16 +4,16 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>NotchIsland</title>
         <item>
-            <title>0.1.1</title>
-            <pubDate>Mon, 02 Nov 2026 11:06:32 +0100</pubDate>
-            <sparkle:version>2</sparkle:version>
-            <sparkle:shortVersionString>0.1.1</sparkle:shortVersionString>
+            <title>0.1.2</title>
+            <pubDate>Mon, 02 Nov 2026 23:07:25 +0100</pubDate>
+            <sparkle:version>3</sparkle:version>
+            <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <enclosure url="https://github.com/DatRush/NotchIsland/releases/download/v0.1.1/NotchIsland-0.1.1-arm64.dmg" length="2022114" type="application/octet-stream" sparkle:edSignature="Ks4LLLDp4b7agIQxt1/ztqo0ba2t3zAXHwsd+Qq2M/p+xPy6tHryXZMhhobLYnVgbgIzSr82uRhxuuJO6cboDg=="></enclosure>
+            <enclosure url="https://github.com/DatRush/NotchIsland/releases/download/v0.1.2/NotchIsland-0.1.2-arm64.dmg" length="2115385" type="application/octet-stream" sparkle:edSignature="owJliwgKbjS5pBZUStyFiwPlCq7JXeWE9++OLnn3Mxgs7XJSBUGWd1e+hFJDMPR6ai5YDQvmE1FPVltypIxvDg=="></enclosure>
         </item>
     </channel>
 </rss><!-- sparkle-signatures:
-edSignature: y2awKOXfZbJ0bFK0Nw/Yd3OTtYGsV5TRL/57SwfrGHwvNxqMZDMUUP09z9m9rNvcOO7NnxcU8FqHjYjThkfmBQ==
+edSignature: ooFwqCrjN6PPcIKr7HQyVyO0NJdm75Luf1Z9tPxYIAlX5A/TgOgrD54wqcIld7uJoHy9ENssqiSUB9jqyw6jBg==
 length: 1134
 -->
