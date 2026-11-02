@@ -1,38 +1,48 @@
 # NotchIsland
 
-NotchIsland — бесплатная утилита для macOS. Небольшая панель у камеры MacBook даёт доступ к буферу обмена, временной полке файлов, снимкам экрана, таймеру, напоминаниям и музыке. Интерфейс переключается между русским и английским.
+NotchIsland is a free macOS utility that puts your clipboard history, a temporary file shelf, screenshots, a timer, reminders, and music controls in a small panel next to your MacBook’s camera. The interface is available in English and Russian.
 
-## Что умеет
+## Install on Apple Silicon
 
-- Показывает историю буфера обмена и временно хранит копии файлов на полке.
-- Сохраняет снимок выбранной области. Из вкладки ChatGPT снимок можно прикрепить к черновику. Загрузка может начаться сразу при прикреплении.
-- Показывает таймер и задачи из выбранного списка Apple Reminders.
-- Управляет воспроизведением Apple Music и Яндекс Музыки. Поддержка YouTube экспериментальная. Загрузка обложек YouTube из сети по умолчанию выключена.
+1. Download the DMG from [GitHub Releases](https://github.com/DatRush/NotchIsland/releases).
+2. Open the DMG and drag **NotchIsland** onto the **Applications** folder.
+3. Eject the disk image and open NotchIsland from Applications. You can find its settings in the NotchIsland menu in the macOS menu bar.
 
-## Установка и обновления
+The app requires macOS 13 or later. The current release uses an ad hoc signature and is not notarized by Apple. If macOS blocks it on first launch, see [Apple’s guide to opening downloaded apps](https://support.apple.com/en-us/102445).
 
-Скачайте DMG для Apple Silicon из [GitHub Releases](https://github.com/DatRush/NotchIsland/releases), перетащите приложение в «Программы» и запустите оттуда. Открывайте меню NotchIsland в строке меню и выбирайте «Проверить обновления…». Фоновые проверки включаются отдельно. Если установлена 0.1.0, один раз вручную замените её версией 0.1.1 или новее: в 0.1.0 механизм проверки не запускается. Первый выпуск подписан локально (ad hoc), поэтому macOS может потребовать подтверждения в настройках конфиденциальности и безопасности. См. [инструкцию Apple](https://support.apple.com/en-us/102445).
+## Updates
 
-## Сборка на Mac
+Choose **Check for Updates…** from the NotchIsland menu. Background checks are off by default; choose **Automatically Check for Updates** to enable them.
 
-Нужны macOS 13 или новее и инструменты разработчика Apple со Swift 5.9 или новее. В Терминале откройте каталог исходников и выполните:
+**Upgrading from 0.1.0?** The updater cannot start in that version. Install version 0.1.1 or later from the DMG once, replacing the old app in Applications. After that, use the menu to check for updates.
+
+## Features
+
+- Reuse items from your clipboard history or keep temporary copies of files on the shelf.
+- Capture a selected area of the screen. In the ChatGPT tab, you can attach a screenshot to a draft. The upload may begin as soon as you attach it, before you send the message.
+- Run a timer and view tasks from a list you choose in Apple Reminders.
+- Control playback in Apple Music and Yandex Music. YouTube support is experimental, and downloading YouTube artwork is off by default.
+
+## Build from source
+
+On a Mac running macOS 13 or later, install Apple’s developer tools with Swift 5.9 or later. From the repository root, run:
 
 ```sh
 bash Scripts/build-app.sh
 ```
 
-Скрипт собирает Release-версию, добавляет иконку, описания системных разрешений и документы, затем подписывает пакет локальной подписью ad hoc. Последняя строка вывода содержит путь к готовому `NotchIsland.app`. Откройте его через Finder. Настройки доступны из меню NotchIsland в строке меню macOS.
+The script builds the release app, bundles its icon, permission descriptions, and documentation, and signs it locally. The last line prints the path to `NotchIsland.app`. Replacing a locally signed build may cause macOS to ask for permissions again.
 
-Это локальная сборка из исходников. При замене пакета macOS может повторно запросить разрешения. Описания разрешений и порядок удаления приведены в политике конфиденциальности.
+To create a drag-and-drop disk image for your Mac’s architecture, run:
 
-## Установочный образ DMG
+```sh
+bash Scripts/build-dmg.sh
+```
 
-Запустите `bash Scripts/build-dmg.sh` на Mac. Скрипт соберёт приложение для архитектуры этого Mac и выведет путь к `NotchIsland.dmg`. Откройте образ, перетащите значок NotchIsland на папку Applications справа, затем извлеките образ и запустите приложение из «Программ».
+The script prints the path to `NotchIsland.dmg`.
 
-Сборка использует локальную подпись ad hoc. Для распространения загружаемого приложения с проверкой Gatekeeper потребуется отдельная сборка с подписью Developer ID и нотариализацией Apple.
+## Privacy, license, and support
 
-## Конфиденциальность и поддержка
+Read the privacy policy in [English](PRIVACY.en.md) or [Russian](PRIVACY.md) for details about data, permissions, and how to remove the app and its data. The policy is also available offline in the app’s About window. For privacy questions, email [tair@kuanyshbayev.com](mailto:tair@kuanyshbayev.com).
 
-Политику можно прочитать без интернета в окне «О проекте». Вопросы о данных можно отправить на [tair@kuanyshbayev.com](mailto:tair@kuanyshbayev.com). [Политика на русском](PRIVACY.md) · [Privacy policy in English](PRIVACY.en.md)
-
-Приложение распространяется по [лицензии MIT](LICENSE). Поддержать разработку можно добровольным [донатом на Boosty](https://boosty.to/taykwn/donate).
+NotchIsland is available under the [MIT License](LICENSE). If you’d like to support development, you can [donate on Boosty](https://boosty.to/taykwn/donate).
