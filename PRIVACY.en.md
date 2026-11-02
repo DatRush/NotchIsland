@@ -60,8 +60,6 @@ To recognize music, NotchIsland matches the title to browser tabs using macOS Au
 
 The packaged app reads the active macOS media session locally through a bundled adapter. The last title, artist and player identifier are saved on the Mac. System artwork is processed in memory.
 
-While displaying the music indicator, NotchIsland can use macOS screen and system audio capture permission to measure frequency levels in the selected player. Audio is processed in memory without storage or transmission. For a browser this includes other audible tabs in that application.
-
 The music integration automatically polls supported running players, including while
 the Music tab is closed, when system permissions are available. YouTube artwork
 requests to `i.ytimg.com` are off by default. You can enable them using “Download

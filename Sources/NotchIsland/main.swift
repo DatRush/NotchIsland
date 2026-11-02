@@ -280,7 +280,7 @@ struct IslandHeader: View {
                 }
                 Color.black.frame(maxWidth: .infinity)
                 if !model.expanded && music.isPlaying {
-                    MusicWaveform(source: music.track?.source).id(music.track?.source).frame(width: 44, height: model.headerHeight)
+                    MusicWaveform(playing: true).frame(width: 44, height: model.headerHeight)
                 } else if !model.expanded && timer.isVisible {
                     FocusProgressRing(timer: timer).frame(width: 20, height: 20)
                         .frame(width: timer.compactLayout.symbolWidth, height: model.headerHeight)

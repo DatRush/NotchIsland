@@ -16,7 +16,7 @@ The app requires macOS 13 or later. The current release uses an ad hoc signature
 
 Choose **Check for Updates…** from the NotchIsland menu. Background checks are off by default; choose **Automatically Check for Updates** to enable them.
 
-This release uses ad hoc signing. After updating, macOS may ask you to grant access again for features such as screen and system audio capture.
+This release uses ad hoc signing. After updating, macOS may ask you to grant access again for features such as screenshot capture.
 
 **Upgrading from 0.1.0?** The updater cannot start in that version. Install version 0.1.1 or later from the DMG once, replacing the old app in Applications. After that, use the menu to check for updates.
 
@@ -25,7 +25,7 @@ This release uses ad hoc signing. After updating, macOS may ask you to grant acc
 - Reuse items from your clipboard history or keep temporary copies of files on the shelf.
 - Capture a selected area of the screen. In the ChatGPT tab, you can attach a screenshot to a draft. The upload may begin as soon as you attach it, before you send the message.
 - Run a timer and view tasks from a list you choose in Apple Reminders.
-- View and control one active macOS media session, including Yandex Music and YouTube in Chrome. The packaged app reads local session artwork using the bundled BSD-licensed mediaremote-adapter. Player-specific adapters remain available when the system session is unavailable. External YouTube thumbnail downloads are off by default. Browser cards show YouTube Music-category videos and Entertainment videos whose description identifies a music collection and whose tags identify music. NotchIsland matches the media title to a browser tab even when YouTube adds a notification count and checks public watch-page metadata without cookies. Unknown categories stay hidden. With screen and system audio capture permission, five bars follow changes relative to recent peaks in each frequency band. If a browser session is filtered out, other running players are checked for music. The bars stay still when audio samples are unavailable or Reduce Motion is on. Wide video thumbnails use a centered square crop in both island sizes.
+- View and control one active macOS media session, including Yandex Music and YouTube in Chrome. The packaged app reads local session artwork using the bundled BSD-licensed mediaremote-adapter. Player-specific adapters remain available when the system session is unavailable. External YouTube thumbnail downloads are off by default. Browser cards show YouTube Music-category videos and Entertainment videos whose description identifies a music collection and whose tags identify music. NotchIsland matches the media title to a browser tab even when YouTube adds a notification count and checks public watch-page metadata without cookies. Unknown categories stay hidden. With screenshot capture permission, five bars follow changes relative to recent peaks in each frequency band. If a browser session is filtered out, other running players are checked for music. The bars stay still when Reduce Motion is on. Wide video thumbnails use a centered square crop in both island sizes.
 
 ## Build from source
 

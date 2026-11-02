@@ -16,23 +16,18 @@ struct MusicArtwork: View {
     }
 }
 struct MusicWaveform: View {
-    var source: String?
-    @StateObject private var meter = MusicLevels()
+    var playing: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
-        let active = reduceMotion ? nil : source
-        TimelineView(.animation(minimumInterval: 1.0 / 60, paused: active == nil || !meter.capturing)) { _ in
-            let now = ProcessInfo.processInfo.systemUptime
-            let levels = meter.capturing ? meter.snapshot(at: now) : nil
+        TimelineView(.animation(minimumInterval: 0.18, paused: !playing || reduceMotion)) { context in
+            let time = context.date.timeIntervalSinceReferenceDate
             HStack(spacing: 3) {
                 ForEach(0..<5) { index in
-                    let height = active == nil ? Double([8, 14, 20, 14, 8][index]) : 3 + 20 * (levels?[index] ?? 0)
-                    Capsule().fill(Color.white.opacity(0.85)).frame(width: 3, height: height)
+                    Capsule().fill(Color.white.opacity(0.85))
+                        .frame(width: 3, height: playing && !reduceMotion ? 5 + 15 * abs(sin(time * 3 + Double(index) * 1.3)) : CGFloat([8, 14, 20, 14, 8][index]))
                 }
             }.frame(width: 28, height: 24)
-        }
-        .task(id: active) { if let active { await meter.observe(source: active) } }
-        .accessibilityHidden(true)
+        }.accessibilityHidden(true)
     }
 }
 struct MusicPlayerView: View {
@@ -52,7 +47,7 @@ struct MusicPlayerView: View {
                         Text(track.title).font(.system(size: 15, weight: .semibold)).lineLimit(2)
                         Text(track.artist).font(.system(size: 12)).foregroundColor(.gray).lineLimit(1)
                     }.frame(maxWidth: .infinity, alignment: .leading)
-                    MusicWaveform(source: track.playing ? track.source : nil).id(track.source)
+                    MusicWaveform(playing: track.playing)
                 }
                 if track.duration > 0 {
                     VStack(spacing: 0) {
