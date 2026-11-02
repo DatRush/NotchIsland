@@ -16,4 +16,5 @@ cp .build/artifacts/sparkle/Sparkle/LICENSE "$contents/Resources/Sparkle-LICENSE
 plutil -lint "$contents/Info.plist"
 codesign --force --sign - "$output"
 codesign --verify --deep --strict "$output"
+bash Checks/UpdaterStartup/run.sh "$output"
 echo "$output"
