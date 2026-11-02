@@ -18,14 +18,16 @@ struct AboutProjectContent {
     • Полка для временных копий файлов и перенос между приложениями.
     • Скриншоты выбранной области и работа с вашим аккаунтом ChatGPT.
     • Таймер, напоминания Apple.
-    • Управление музыкой
+    • Обложка и управление активным плеером Apple Music, Яндекс Музыки или YouTube. Для видео YouTube приложение проверяет категорию и теги на публичной странице ролика.
+    • С разрешением на запись системного звука полосы реагируют на музыку.
     • Перестановка вкладок под себя.
     """, """
     • Clipboard history and quick access to your last copied item.
     • A shelf for temporary file copies and transfers between apps.
     • Area screenshots and access to your ChatGPT account.
     • Timer and Apple Reminders.
-    • Music controls.
+    • Artwork and playback controls for Apple Music, Yandex Music and YouTube. For YouTube videos the app checks the category and tags on the public video page.
+    • With system audio capture permission the bars react to the music.
     • Reorder tabs to suit your workflow.
     """) }
     static var supportDetails: String { L("Проект распространяется бесплатно. Если он оказался вам полезен, буду благодарен за любую финансовую поддержку на Boosty.", "The project is free. If you find it useful, I would be grateful for any financial support on Boosty.") }

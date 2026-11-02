@@ -23,7 +23,44 @@ struct PlayingTrack: Equatable {
 }
 enum MusicCommand { case toggle, next, previous, seek(Double) }
 
-// Each adapter uses the player's own supported interface. No MediaRemote entitlement spoofing.
+private struct SystemMediaSession: Decodable {
+    let bundleIdentifier: String
+    let parentApplicationBundleIdentifier: String?
+    let title: String
+    let artist: String?
+    let playing: Bool
+    let duration: Double?
+    let elapsedTimeNow: Double?
+    let artworkData: Data?
+
+    var source: String { parentApplicationBundleIdentifier ?? bundleIdentifier }
+
+    static func invoke(_ arguments: [String]) -> Data? {
+        guard let script = Bundle.main.url(forResource: "mediaremote-adapter", withExtension: "pl"),
+              let frameworks = Bundle.main.privateFrameworksURL else { return nil }
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/perl")
+        process.arguments = [script.path, frameworks.appendingPathComponent("MediaRemoteAdapter.framework").path] + arguments
+        let output = Pipe()
+        process.standardOutput = output
+        process.standardError = FileHandle.nullDevice
+        do { try process.run() } catch { return nil }
+        let data = output.fileHandleForReading.readDataToEndOfFile()
+        process.waitUntilExit()
+        return process.terminationStatus == 0 ? data : nil
+    }
+
+    static func read(artwork: Bool = true) -> SystemMediaSession? {
+        guard let data = invoke(artwork ? ["get", "--now"] : ["get", "--no-artwork"]) else { return nil }
+        return try? JSONDecoder().decode(Self.self, from: data)
+    }
+
+    var track: PlayingTrack {
+        PlayingTrack(source: source, title: title, artist: artist ?? "", playing: playing,
+                     elapsed: elapsedTimeNow ?? 0, duration: duration ?? 0, artwork: artworkData)
+    }
+}
+
 final class AppleMusicAdapter {
     private var denied = false
     private var coverKey = ""
@@ -221,10 +258,12 @@ final class MusicPlayback: ObservableObject {
     private var resumeRequest: (source: String, deadline: Date)?
     private let defaults: UserDefaults
     private let queue = DispatchQueue(label: "NotchIsland.music", qos: .utility)
+    private let youtube = YouTubeMusicFilter()
     private let apple = AppleMusicAdapter()
     private let accessible = AccessibleMusicAdapter()
     private var timer: Timer?
     private var polling = false
+    private var systemSource: String?
     private var artworkKey = ""
     private var artworkRetry = Date.distantPast
     private var artworkTask: RemoteArtworkRequest?
@@ -238,7 +277,9 @@ final class MusicPlayback: ObservableObject {
         self.defaults = defaults
         if let saved = defaults.dictionary(forKey: "lastMusicTrack"),
            let source = saved["source"] as? String, let title = saved["title"] as? String {
-            track = PlayingTrack(source: source, title: title, artist: saved["artist"] as? String ?? "", playing: false, elapsed: 0, duration: 0)
+            if !YouTubeMusicFilter.browsers.contains(source) {
+                track = PlayingTrack(source: source, title: title, artist: saved["artist"] as? String ?? "", playing: false, elapsed: 0, duration: 0)
+            }
         }
         defaults.register(defaults: ["musicCaptureArtwork": true])
         lastRemoteArtworkEnabled = remoteArtworkEnabled
@@ -275,6 +316,18 @@ final class MusicPlayback: ObservableObject {
         queue.async { self.apple.resetPermission() }
         poll()
     }
+    static func playbackSamples(running: [(String, pid_t)], system: () -> PlayingTrack?,
+                                read: (String, pid_t) -> PlayingTrack?, allows: (PlayingTrack) -> Bool)
+        -> (PlayingTrack?, [PlayingTrack]) {
+        guard !running.isEmpty else { return (nil, []) }
+        let session = system()
+        if let session, running.contains(where: { $0.0 == session.source }), allows(session) {
+            return (session, [session])
+        }
+        let alternatives = running.filter { $0.0 != session?.source }
+        return (nil, alternatives.compactMap { read($0.0, $0.1) }.filter(allows))
+    }
+
     func poll() {
         guard enabled, !polling else { return }; polling = true
         let ids = ["com.apple.Music", "ru.yandex.desktop.music", "com.google.Chrome", "ru.yandex.desktop.yandex-browser", "com.apple.Safari"]
@@ -283,13 +336,20 @@ final class MusicPlayback: ObservableObject {
         }
         queue.async {
             self.accessible.clearMissing(Set(running.map(\.0)))
-            let samples = running.compactMap { id, pid in id == "com.apple.Music" ? self.apple.read() : self.accessible.read(id: id, pid: pid) }
+            let (approvedSystem, samples) = Self.playbackSamples(running: running, system: {
+                SystemMediaSession.read()?.track
+            }, read: { id, pid in
+                id == "com.apple.Music" ? self.apple.read() : self.accessible.read(id: id, pid: pid)
+            }, allows: self.youtube.allows)
             DispatchQueue.main.async {
                 self.polling = false
-                if let chosen = Self.choose(samples, current: self.track?.source, previous: self.previous) {
+                self.systemSource = approvedSystem?.source
+                if let chosen = approvedSystem ?? Self.choose(samples, current: self.track?.source, previous: self.previous) {
                     self.track = chosen
                     if chosen.playing { self.resumeMessage = nil }
                     self.defaults.set(["source": chosen.source, "title": chosen.title, "artist": chosen.artist], forKey: "lastMusicTrack")
+                } else if let last = self.track, YouTubeMusicFilter.browsers.contains(last.source) {
+                    self.track = nil
                 } else if var last = self.track {
                     last.playing = false; self.track = last
                 }
@@ -314,10 +374,6 @@ final class MusicPlayback: ObservableObject {
         guard allowed.contains(source), let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: source) else {
             resumeMessage = L("Плеер не найден на этом Mac.", "Player not found on this Mac."); return
         }
-        if source != "com.apple.Music" && !AXIsProcessTrusted() {
-            resumeMessage = L("Разрешите NotchIsland в настройках macOS → Универсальный доступ, затем перезапустите островок.", "Allow NotchIsland in macOS Settings → Accessibility, then restart the app.")
-            return
-        }
         resumeMessage = nil
         resumeRequest = (source, Date().addingTimeInterval(10))
         if NSWorkspace.shared.runningApplications.contains(where: { $0.bundleIdentifier == source }) { poll(); return }
@@ -331,9 +387,27 @@ final class MusicPlayback: ObservableObject {
         }
     }
     func send(_ command: MusicCommand) {
-        guard let source = track?.source else { return }
+        guard let displayed = track else { return }
+        let source = displayed.source
+        let useSystem = systemSource == source
         queue.async {
-            if source == "com.apple.Music" { self.apple.command(command) }
+            if useSystem {
+                guard let current = SystemMediaSession.read(artwork: false)?.track,
+                      current.key == displayed.key, self.youtube.allows(current) else {
+                    DispatchQueue.main.async { self.poll() }
+                    return
+                }
+                let arguments: [String]
+                switch command {
+                case .toggle: arguments = ["send", "2"]
+                case .next: arguments = ["send", "4"]
+                case .previous: arguments = ["send", "5"]
+                case .seek(let seconds):
+                    guard seconds.isFinite, seconds >= 0, seconds < 1e10 else { return }
+                    arguments = ["seek", String(Int64(seconds * 1_000_000))]
+                }
+                _ = SystemMediaSession.invoke(arguments)
+            } else if source == "com.apple.Music" { self.apple.command(command) }
             else { self.accessible.command(command, source: source) }
             DispatchQueue.main.async { self.poll() }
         }
@@ -346,7 +420,7 @@ final class MusicPlayback: ObservableObject {
             return
         }
         let newTrack = artworkKey != track.key
-        guard newTrack || (artwork == nil && artworkTask == nil && Date() >= artworkRetry) else { return }
+        guard newTrack || (artwork == nil && artworkTask == nil && (track.artwork != nil || Date() >= artworkRetry)) else { return }
         artworkKey = track.key; artworkRetry = Date().addingTimeInterval(8)
         artworkAttempt = UUID()
         let attempt = artworkAttempt

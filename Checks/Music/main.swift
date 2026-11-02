@@ -45,3 +45,38 @@ restored.remoteArtworkPreferenceChanged()
 check(!restored.remoteArtworkEnabled, "External artwork can be disabled without restarting")
 check(restored.track?.title == "Last track", "Privacy toggle preserves player information")
 print("Music privacy total: \(count) checks passed")
+
+let video = "abcdefghijk"
+let canonical = "<link rel=\"canonical\" href=\"https://www.youtube.com/watch?v=\(video)\">"
+let musicTag = #"<meta itemprop="genre" content="Music">"#
+check(YouTubeMusicFilter.classification(html: canonical + musicTag, id: video) == true, "Confirmed music")
+check(YouTubeMusicFilter.classification(html: canonical + musicTag.replacingOccurrences(of: "Music", with: "Education"), id: video) == false, "Ordinary video hidden")
+check(YouTubeMusicFilter.classification(html: canonical, id: video) == nil, "Missing category hidden")
+check(YouTubeMusicFilter.classification(html: canonical + musicTag, id: "anotheritem") == nil, "Wrong video hidden")
+check(YouTubeMusicFilter.videoID("https://example.org/watch?v=" + video) == nil, "Foreign tab ignored")
+print("Music filter total: \(count) checks passed")
+
+check(YouTubeMusicFilter.matches(tabTitle: "(1) coconut matcha. - YouTube", mediaTitle: "coconut matcha."), "YouTube notification count")
+check(!YouTubeMusicFilter.matches(tabTitle: "Review of coconut matcha. - YouTube", mediaTitle: "coconut matcha."), "Unrelated title suffix rejected")
+print("Music matching total: \(count) checks passed")
+
+let entertainment = canonical + musicTag.replacingOccurrences(of: "Music", with: "Entertainment")
+let collection = #"<meta property="og:description" content="A compilation of sounds for sleep.">"#
+let musicKeyword = #"<meta property="og:video:tag" content="music">"#
+check(YouTubeMusicFilter.classification(html: entertainment + collection + musicKeyword, id: video) == true, "Tagged music compilation")
+check(YouTubeMusicFilter.classification(html: entertainment + musicKeyword, id: video) == false, "Music tag alone insufficient")
+check(YouTubeMusicFilter.classification(html: entertainment + collection, id: video) == false, "Description alone insufficient")
+print("Music compilation total: \(count) checks passed")
+
+let browserVideo = sample("com.google.Chrome", true)
+let appleTrack = sample("com.apple.Music", true)
+let fallback = MusicPlayback.playbackSamples(running: [(browserVideo.source, 1), (appleTrack.source, 2)],
+    system: { browserVideo }, read: { id, _ in
+        precondition(id == appleTrack.source)
+        return appleTrack
+    }, allows: { $0.source != browserVideo.source })
+check(fallback.0 == nil && fallback.1 == [appleTrack], "Rejected Chrome leaves playing Apple Music available")
+let idle = MusicPlayback.playbackSamples(running: [], system: { fatalError("Unexpected system poll") },
+    read: { _, _ in fatalError("Unexpected player poll") }, allows: { _ in true })
+check(idle.0 == nil && idle.1.isEmpty, "No running players skips all adapters")
+print("Music polling total: \(count) checks passed")

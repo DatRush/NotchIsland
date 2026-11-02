@@ -13,9 +13,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.1</string>
+	<string>0.1.2</string>
 	<key>SUPublicEDKey</key>
 	<string>GijQa9EUjqDRLlaogadiaz7W+wMQnx0FNqWqmwH/yGk=</string>
 	<key>SUVerifyUpdateBeforeExtraction</key>
@@ -35,7 +35,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>NotchIsland читает текущий трек Apple Music и управляет воспроизведением по вашим нажатиям.</string>
+	<string>NotchIsland определяет вкладку YouTube для проверки категории ролика, читает текущий трек Apple Music и управляет воспроизведением по вашим нажатиям.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>NotchIsland показывает и изменяет выбранный список Apple Reminders и переносит ваши локальные напоминания.</string>
 	<key>NSRemindersUsageDescription</key>

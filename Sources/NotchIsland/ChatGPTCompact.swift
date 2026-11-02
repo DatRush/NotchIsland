@@ -114,8 +114,25 @@ enum ChatGPTCompact {
             || buttons.find(button => !button.disabled) || buttons[0];
         };
         let transcript = document.querySelector('[role="region"][aria-label="Conversation"]')
-          || document.querySelector('section[aria-label^="Conversation "]')
-          || document.querySelector('[data-testid="conversation-turn-0"]')?.parentElement;
+          || document.querySelector('section[aria-label^="Conversation "]');
+        // A streaming conversation can have numbered turns but no named region or turn zero.
+        // Find their shared message branch, stopping before the editor or site header.
+        if (composer && (!transcript || transcript.contains(composer))) {
+          const scope = transcript || composer.closest('main') || document.querySelector('main');
+          const turns = [...(scope?.querySelectorAll('[data-testid^="conversation-turn-"],[data-message-author-role]') || [])]
+            .filter(e => !composer.contains(e) && !e.contains(composer));
+          if (turns.length) {
+            let branch = turns[0];
+            while (branch && !turns.every(e => branch.contains(e))) branch = branch.parentElement;
+            if (branch && !branch.contains(composer)) {
+              // Prefer a wrapper around the turns so the first single turn can grow into a list.
+              const wrapper = branch.parentElement;
+              if (wrapper && wrapper !== scope && !wrapper.contains(composer)
+                  && !wrapper.querySelector('header,nav,[role="banner"]')) branch = wrapper;
+              transcript = branch;
+            }
+          }
+        }
         // A submit button elsewhere on the page must not expand the composer to the whole app.
         if (composer && !activeControl(composer)) {
           const siblingHost = composer.parentElement;
@@ -135,6 +152,18 @@ enum ChatGPTCompact {
             if (siblings.length > 1) {
               const messageBranches = siblings.filter(e => e.matches('article,[data-message-author-role]') || e.querySelector('article,[data-message-author-role]'));
               if (messageBranches.length === 1) transcript = messageBranches[0];
+              else if (!messageBranches.length) {
+                // The signed-in region can contain the turns, a zero-height scroll
+                // anchor and the composer. Identify content, not the anchor or toolbar.
+                const content = siblings.filter(e => e.querySelector('h4,[aria-level="4"]')
+                  && e.querySelector('p,pre,table,math,[role="math"],.katex'));
+                if (content.length === 1) transcript = content[0];
+                else if (!content.length) {
+                  const populated = siblings.filter(e => e.getBoundingClientRect().height > 0);
+                  if (populated.length === 1 && populated[0].querySelector('h4,[aria-level="4"]'))
+                    transcript = populated[0];
+                }
+              }
               break;
             }
             shared = composerBranch;
