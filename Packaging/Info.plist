@@ -13,7 +13,21 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleVersion</key>
-	<string>0.1</string>
+	<string>1</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1.0</string>
+	<key>SUPublicEDKey</key>
+	<string>GijQa9EUjqDRLlaogadiaz7W+wMQnx0FNqWqmwH/yGk=</string>
+	<key>SURequireSignedFeed</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/DatRush/NotchIsland/main/updates/appcast.xml</string>
+	<key>SUEnableSystemProfiling</key>
+	<false/>
+	<key>SUEnableAutomaticChecks</key>
+	<false/>
+	<key>SUAutomaticallyUpdate</key>
+	<false/>
 	<key>LSMinimumSystemVersion</key>
 	<string>13.0</string>
 	<key>LSUIElement</key>

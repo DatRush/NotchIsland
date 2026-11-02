@@ -2,6 +2,7 @@ import AppKit
 import SwiftUI
 import UniformTypeIdentifiers
 import Combine
+import Sparkle
 
 enum IslandSection: String, CaseIterable {
     case home, clipboard, shelf, gpt, screenshot, focus, reminders, music
@@ -514,6 +515,10 @@ final class DismissalPanel: NSPanel {
 }
 
 final class Delegate: NSObject, NSApplicationDelegate {
+    private var updates: SPUStandardUpdaterController?
+    private var checkUpdatesItem: NSMenuItem?
+    private var automaticUpdatesItem: NSMenuItem?
+
     let model = Model()
     var panel: Panel!
     var item: NSStatusItem!
@@ -558,6 +563,19 @@ final class Delegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         menu.addItem(withTitle: L("О проекте…", "About…"), action: #selector(about), keyEquivalent: "").target = self
         menu.addItem(withTitle: L("Настройки…", "Settings…"), action: #selector(openSettings), keyEquivalent: ",").target = self
+        if Bundle.main.object(forInfoDictionaryKey: "SUFeedURL") != nil {
+            let controller = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+            updates = controller
+            let entry = menu.addItem(withTitle: L("Проверить обновления…", "Check for Updates…"),
+                                     action: #selector(SPUStandardUpdaterController.checkForUpdates(_:)), keyEquivalent: "")
+            entry.target = controller
+            checkUpdatesItem = entry
+            let automatic = menu.addItem(withTitle: L("Проверять обновления автоматически", "Automatically Check for Updates"),
+                                         action: #selector(toggleUpdateChecks(_:)), keyEquivalent: "")
+            automatic.target = self
+            automatic.state = controller.updater.automaticallyChecksForUpdates ? .on : .off
+            automaticUpdatesItem = automatic
+        }
         menu.addItem(NSMenuItem.separator())
         menu.addItem(withTitle: L("Завершить", "Quit"), action: #selector(quit), keyEquivalent: "q").target = self
         item.menu = menu
@@ -719,10 +737,17 @@ final class Delegate: NSObject, NSApplicationDelegate {
             }
         }
     }
+    @objc private func toggleUpdateChecks(_ sender: NSMenuItem) {
+        guard let updater = updates?.updater else { return }
+        updater.automaticallyChecksForUpdates.toggle()
+        sender.state = updater.automaticallyChecksForUpdates ? .on : .off
+    }
     @objc private func updateLanguage() {
         item.menu?.items.first?.title = L("О проекте…", "About…")
         item.menu?.items.dropFirst().first?.title = L("Настройки…", "Settings…")
         item.menu?.items.last?.title = L("Завершить", "Quit")
+        automaticUpdatesItem?.title = L("Проверять обновления автоматически", "Automatically Check for Updates")
+        checkUpdatesItem?.title = L("Проверить обновления…", "Check for Updates…")
         settingsWindow?.title = L("Настройки NotchIsland", "NotchIsland Settings")
         aboutWindow?.title = L("О проекте", "About")
         NSApp.mainMenu = EditingMenu.make()

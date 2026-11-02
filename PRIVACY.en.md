@@ -1,6 +1,6 @@
 # NotchIsland Privacy Policy
 
-Updated: 1 November 2026.
+Updated: 2 November 2026.
 [Русский](PRIVACY.md)
 
 ## Author and contact
@@ -95,6 +95,10 @@ New screenshots are created with POSIX mode 0600; the shelf root and new tempora
 The app does not implement its own encryption for shelf files or screenshots. Protection
 depends on your macOS account and system safeguards. Backups and synced folders may retain
 additional copies. File deletion is not guaranteed secure erasure of the storage medium.
+
+## App updates
+
+“Check for Updates…” requests the project’s release feed on GitHub. Background checks are off by default. Use “Automatically Check for Updates” in the NotchIsland menu to enable or disable them. When you choose to install an update, Sparkle downloads it from GitHub Releases and verifies its signature. GitHub and its delivery network receive your IP address and ordinary request metadata, including the User-Agent header. Sparkle system profiling is disabled. The update preference is stored locally.
 
 ## Controls and deletion
 

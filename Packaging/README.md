@@ -42,3 +42,11 @@ Copy `PRIVACY.md`, `PRIVACY.en.md` and `LICENSE` from the repository root into `
 ## Drag-to-install disk image
 
 Run `bash Scripts/build-dmg.sh` from the repository root on macOS. It packages the Release bundle and an absolute symlink to `/Applications` in a compressed, read-only HFS+ image. `FinderLayout.dsstore` is a generated Finder metadata template for icon view, with NotchIsland at (125, 108) and Applications at (385, 108). Building the image requires no third-party DMG tools.
+
+## Publishing a Sparkle update
+
+Set a new user-facing version in CFBundleShortVersionString (for example 0.1.1) and increment the integer CFBundleVersion. Keep the bundle identifier and public signing key stable. Build the DMG on the release Mac with `bash Scripts/build-dmg.sh`. Run `bash Scripts/prepare-update.sh <path-to-DMG>` on the resulting image. The signing tool uses the NotchIsland-Updates entry in the release maintainer’s Keychain. The script checks the feed and archive against the public key embedded in the bundle.
+
+Publish the versioned DMG from the output folder as an asset of a GitHub Release tagged v<version>. Once the asset is downloadable, copy the signed appcast.xml from the output folder to updates/appcast.xml on main and push it without editing its bytes. Verify the downloaded archive and feed with the same public-key verifier. Keep the private update key in the maintainer’s Keychain and a secure backup under their control.
+
+This feed serves arm64 builds for macOS 13 and newer. The embedded Sparkle dependency is pinned by Package.resolved. Signed updates and the initial Gatekeeper launch are separate steps. This release still uses the project’s local ad-hoc code signature.
