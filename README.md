@@ -4,6 +4,10 @@ NotchIsland is a free macOS utility that puts your clipboard history, a temporar
 
 The compact ChatGPT view keeps the conversation above the input while a reply is being generated. The message area scrolls independently when ChatGPT inserts a scroll anchor between replies and the input.
 
+## Version 0.1.4
+
+This version adds optional city weather and shows the timer beside music artwork. A completed timer takes priority when you reopen the island.
+
 ## Install on Apple Silicon
 
 1. Download the DMG from [GitHub Releases](https://github.com/DatRush/NotchIsland/releases).
@@ -25,7 +29,15 @@ This release uses ad hoc signing. After updating, macOS may ask you to grant acc
 - Reuse items from your clipboard history or keep temporary copies of files on the shelf.
 - Capture a selected area of the screen. In the ChatGPT tab, you can attach a screenshot to a draft. The upload may begin as soon as you attach it, before you send the message.
 - Run a timer and view tasks from a list you choose in Apple Reminders.
-- View and control one active macOS media session, including Yandex Music and YouTube in Chrome. The packaged app reads local session artwork using the bundled BSD-licensed mediaremote-adapter. Player-specific adapters remain available when the system session is unavailable. External YouTube thumbnail downloads are off by default. Browser cards show YouTube Music-category videos and Entertainment videos whose description identifies a music collection and whose tags identify music. NotchIsland matches the media title to a browser tab even when YouTube adds a notification count and checks public watch-page metadata without cookies. Unknown categories stay hidden. With screenshot capture permission, five bars follow changes relative to recent peaks in each frequency band. If a browser session is filtered out, other running players are checked for music. The bars stay still when Reduce Motion is on. Wide video thumbnails use a centered square crop in both island sizes.
+- View and control one active macOS media session, including Yandex Music and YouTube in Chrome. The packaged app reads local session artwork using the bundled BSD-licensed mediaremote-adapter. Player-specific adapters remain available when the system session is unavailable. External YouTube thumbnail downloads are off by default. Browser cards show YouTube Music-category videos and Entertainment videos whose description identifies a music collection and whose tags identify music. NotchIsland matches the media title to a browser tab even when YouTube adds a notification count and checks public watch-page metadata without cookies. Unknown categories stay hidden. Five decorative bars animate during playback without capturing audio or requiring screen capture permission. When a timer is also visible, its animated progress dial replaces the bars on the right of the collapsed island; the music artwork remains on the left. Timer completion selects the timer tab, and reopening the island keeps the completed timer ahead of playing music. If a browser session is filtered out, other running players are checked for music. The bars stay still when Reduce Motion is on. Wide video thumbnails use a centered square crop in both island sizes.
+
+## Weather
+
+Choose a city under Settings → Weather to display its weather icon and temperature in Celsius to the left of the camera in the expanded panel. The right side stays empty. City search uses Open-Meteo geocoding; device location is not requested. Weather refreshes every 15 minutes while the feature is active and the app is running. A failed request keeps the last reading; an indicator and tooltip identify failed updates or data older than an hour. Turning weather off cancels requests and removes the saved city and reading.
+
+Weather data comes from [Open-Meteo](https://open-meteo.com/) under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); city data comes from [GeoNames](https://www.geonames.org/). Current conditions are model estimates and may differ from Apple Weather. The integration uses the free non-commercial API; commercial distribution requires reviewing the provider's service terms. Apple Weather via WeatherKit remains deferred.
+
+The weather widget’s operation and appearance were accepted by the project owner on 9 November 2026. Sleep recovery and prolonged offline use still need separate validation.
 
 ## Build from source
 

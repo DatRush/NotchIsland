@@ -1,6 +1,6 @@
 # NotchIsland Privacy Policy
 
-Updated: 2 November 2026.
+Updated: 9 November 2026.
 [Русский](PRIVACY.md)
 
 ## Author and contact
@@ -162,3 +162,10 @@ The author cannot remotely delete data from your Mac or third-party accounts.
 
 This document will be dated and updated when processing changes. New backend features
 or analytics require a separate assessment and an updated description.
+
+
+## Weather and Open-Meteo
+
+Weather is inactive until you select a city in Settings. An explicit city search sends the entered query and interface language to `geocoding-api.open-meteo.com`. Selecting a city sends its coordinates to `api.open-meteo.com` for current weather, with updates every 15 minutes while the feature is active and the app is running, including when the panel is closed. These services receive your IP address. The app does not request device location. Requests use an ephemeral session without cookies, stored credentials or disk HTTP cache; redirects are rejected.
+
+The selected city, coordinates and last weather reading are stored in local preferences without automatic expiry. Failed updates preserve the reading; data older than an hour is marked as outdated. Turning weather off cancels requests and removes the saved city and reading. City search results stay in memory and are cleared on selection, query change or leaving settings. See [Open-Meteo's privacy policy](https://open-meteo.com/en/terms#privacy).

@@ -118,6 +118,8 @@ final class Model: ObservableObject {
         guard !Preferences.shared.blocksCurrentApp, timerNoticeGate.request() else { return }
         noticeDismissal?.cancel()
         timerNotice = true
+        section = .focus
+        UserDefaults.standard.set(section.rawValue, forKey: "selectedSection")
         expanded = true
         change?()
         let dismissal = DispatchWorkItem { [weak self] in self?.toggle(false) }
@@ -266,12 +268,18 @@ struct IslandHeader: View {
     var body: some View {
         Button {
             if !model.expanded {
-                if music.isPlaying { model.select(.music) }
+                if timer.state == .completed { model.select(.focus) }
+                else if music.isPlaying { model.select(.music) }
                 else if timer.isVisible { model.select(.focus) }
             }
             model.toggle(!model.expanded)
         } label: {
             HStack(spacing: 0) {
+                if model.expanded && !model.timerNotice {
+                    WeatherHeader()
+                        .frame(width: max(0, (model.displayedSize.width - model.notchWidth) / 2 - 24), alignment: .leading)
+                        .clipped().padding(.leading, 20)
+                }
                 if !model.expanded && music.isPlaying {
                     MusicArtwork(music: music).frame(width: 24, height: 24).frame(width: 44, height: model.headerHeight)
                 } else if !model.expanded && timer.isVisible {
@@ -280,14 +288,21 @@ struct IslandHeader: View {
                 }
                 Color.black.frame(maxWidth: .infinity)
                 if !model.expanded && music.isPlaying {
-                    MusicWaveform(playing: true).frame(width: 44, height: model.headerHeight)
+                    if timer.isVisible {
+                        FocusProgressRing(timer: timer).frame(width: 20, height: 20)
+                            .frame(width: 44, height: model.headerHeight)
+                    } else {
+                        MusicWaveform(playing: true).frame(width: 44, height: model.headerHeight)
+                    }
                 } else if !model.expanded && timer.isVisible {
                     FocusProgressRing(timer: timer).frame(width: 20, height: 20)
                         .frame(width: timer.compactLayout.symbolWidth, height: model.headerHeight)
                 }
             }.frame(height: model.headerHeight).contentShape(Rectangle())
         }.buttonStyle(.plain)
-            .accessibilityLabel(model.expanded ? L("Закрыть островок", "Close island") : music.isPlaying ? L("Открыть музыку", "Open music") : timer.isVisible ?
+            .accessibilityValue(!model.expanded && music.isPlaying && timer.isVisible ?
+                (timer.state == .completed ? L("Таймер завершён", "Timer finished") : L("Таймер: ", "Timer: ") + timer.timeText + (timer.state == .paused ? L(", пауза", ", paused") : "")) : "")
+            .accessibilityLabel(model.expanded ? L("Закрыть островок", "Close island") : timer.state == .completed ? L("Открыть завершённый таймер", "Open completed timer") : music.isPlaying ? L("Открыть музыку", "Open music") : timer.isVisible ?
                 L("Открыть таймер: ", "Open timer: ") + (timer.state == .completed ? L("завершён", "finished") : timer.timeText) + (timer.state == .paused ? L(", пауза", ", paused") : "") : L("Открыть островок", "Open island"))
     }
 }
@@ -541,6 +556,7 @@ final class Delegate: NSObject, NSApplicationDelegate {
         }
         #endif
         _ = ClipboardHistory.shared
+        _ = WeatherStore.shared
         panel = Panel(contentRect: .zero, styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
         panel.isOpaque = false; panel.backgroundColor = .clear; panel.hasShadow = false
         panel.level = .statusBar

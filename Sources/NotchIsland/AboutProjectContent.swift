@@ -18,6 +18,7 @@ struct AboutProjectContent {
     • Полка для временных копий файлов и перенос между приложениями.
     • Скриншоты выбранной области и работа с вашим аккаунтом ChatGPT.
     • Таймер, напоминания Apple.
+    • Погода Open-Meteo для выбранного города, без доступа к геолокации. Поиск и обновление передают сервису запрос, координаты города и IP-адрес.
     • Обложка и управление активным плеером Apple Music, Яндекс Музыки или YouTube. Для видео YouTube приложение проверяет категорию и теги на публичной странице ролика.
     • Перестановка вкладок под себя.
     """, """
@@ -25,6 +26,7 @@ struct AboutProjectContent {
     • A shelf for temporary file copies and transfers between apps.
     • Area screenshots and access to your ChatGPT account.
     • Timer and Apple Reminders.
+    • Open-Meteo weather for a selected city, without device location access. Search and updates send the query, city coordinates and IP address to the service.
     • Artwork and playback controls for Apple Music, Yandex Music and YouTube. For YouTube videos the app checks the category and tags on the public video page.
     • Reorder tabs to suit your workflow.
     """) }

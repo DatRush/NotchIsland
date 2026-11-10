@@ -70,6 +70,7 @@ struct PreferencesView: View {
                 Text(L("Язык ChatGPT задаётся в самом ChatGPT.", "ChatGPT language is managed in ChatGPT."))
                     .font(.caption).foregroundColor(.secondary)
             }
+            WeatherSettings()
             Section(L("Музыка", "Music")) {
                 Toggle(L("Обложка Яндекса из окна плеера", "Capture Yandex artwork from its window"), isOn: $captureMusicArtwork)
                 Toggle(L("Загружать обложки YouTube из интернета", "Download YouTube artwork from the internet"), isOn: $remoteMusicArtwork)
@@ -77,7 +78,7 @@ struct PreferencesView: View {
                 Text(L("Выключено по умолчанию. При включении Google получает IP-адрес и идентификатор видео, в том числе когда вкладка музыки закрыта. Выключение останавливает текущую загрузку.", "Off by default. When enabled, Google receives your IP address and the video identifier, including while the Music tab is closed. Turning this off stops the current download."))
                     .font(.caption).foregroundColor(.secondary)
                 Button(L("Подключить управление плеерами…", "Connect player controls…")) { MusicPlayback.shared.connect() }
-                Text(L("Apple Music — Automation; Яндекс Музыка и YouTube — Универсальный доступ. Музыка заменяет таймер в закрытом островке только во время воспроизведения.", "Apple Music uses Automation; Yandex Music and YouTube use Accessibility. Music replaces the collapsed timer only during playback."))
+                Text(L("Apple Music — Automation; Яндекс Музыка и YouTube — Универсальный доступ. Во время воспроизведения слева показывается обложка, справа — индикатор активного таймера или музыкальные полосы.", "Apple Music uses Automation; Yandex Music and YouTube use Accessibility. During playback, artwork appears on the left and the active timer indicator or music bars on the right."))
                     .font(.caption).foregroundColor(.secondary)
             }
             Section(L("Скриншоты", "Screenshots")) {

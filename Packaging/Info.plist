@@ -13,9 +13,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>5</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.3</string>
+	<string>0.1.4</string>
 	<key>SUPublicEDKey</key>
 	<string>GijQa9EUjqDRLlaogadiaz7W+wMQnx0FNqWqmwH/yGk=</string>
 	<key>SUVerifyUpdateBeforeExtraction</key>
